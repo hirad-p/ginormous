@@ -1,0 +1,17 @@
+# Compiled Sources #
+####################
+*.class
+*.jar
+
+# OS Generated #
+################
+.DS_Store
+
+# Project Stuff #
+#################
+.classpath
+.project
+.settings/
+/src/test
+/Lab 2
+/target
