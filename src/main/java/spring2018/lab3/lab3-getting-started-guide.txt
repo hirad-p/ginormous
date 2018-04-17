@@ -1,0 +1,98 @@
+LAB3 getting-started guide
+==========================
+OBJECTIVE:
+----------
+The objective of lab3 is the same as lab2 -- analyze a FASTA file and output the counts for each amino acid in each of 3 reading frames.  The only difference between lab2 and lab3 (besides using Spark instead of hadoop MapReduce) is the output format.  In lab2, you created one output file.  In this lab, you'll actually create three output files - one for RF1, one for RF2, and one for RF3, as discussed below.
+
+COMPILING YOUR CODE:
+--------------------
+I've provided a pom.xml that you should use to build your code.  You can use an IDE (e.g. eclipse) or the command-line (mvn) to build your JAR file.  
+
+RUNNING YOUR CODE:
+------------------
+The graders will run your code as follows.  Make sure to implement the code provided and match the output as provided below.
+
+/opt/mapr/spark/spark-2.1.0/bin/spark-submit --master local[*] --class spring2018.lab3.solution.SparkAA CS185-jar-with-dependencies.jar /user/user01/LAB3/Homo_sapiens.GRCh38.dna.chromosome.1.fa /user/user01/sparkout /user/user01/LAB3/codon2aa.txt
+
+OUTPUT
+------
+Implement the code as provided to match the output as shown below.  Note the *order* of your output may be different than shown below -- that's fine as long as the numbers match.
+
+The records are of the form:
+(key, value) = (amino acid, count in reading frame)
+
+Your program must create 3 output files that match the following:
+
+
+[user01@mapr60 ~]$ cat /user/user01/LAB3/sparkout_RF1/part-00000 
+(Tyrosine,2337305)
+(Alanine,3381454)
+(Stop codons,4008143)
+(Asparagine,2936220)
+(Glutamic acid,2854530)
+(Arginine,3928264)
+(Histidine,2544916)
+(Serine,6964239)
+(Lysine,4364002)
+(Leucine,8447464)
+(Phenylalanine,4376879)
+(Tryptophan,1456170)
+(Glycine,4166742)
+(Cysteine,2647046)
+(Threonine,3868541)
+(Glutamine,3046292)
+(Aspartic acid,1758262)
+(Methionine,1368056)
+(Proline,4153642)
+(Isoleucine,4338850)
+
+
+[user01@mapr60 ~]$ cat /user/user01/LAB3/sparkout_RF2/part-00000
+(Tyrosine,2221116)
+(Alanine,3215080)
+(Stop codons,3806777)
+(Asparagine,2784133)
+(Glutamic acid,2715951)
+(Arginine,3730207)
+(Histidine,2414470)
+(Lysine,4149451)
+(Serine,6610067)
+(Leucine,8033631)
+(Phenylalanine,4157966)
+(Tryptophan,1383705)
+(Glycine,3954067)
+(Cysteine,2514091)
+(Threonine,3674922)
+(Glutamine,2895104)
+(Aspartic acid,1670500)
+(Methionine,1303051)
+(Proline,3948281)
+(Isoleucine,4120383)
+
+
+[user01@mapr60 ~]$ cat /user/user01/LAB3/sparkout_RF3/part-00000
+(Tyrosine,2223533)
+(Alanine,3211077)
+(Stop codons,3809253)
+(Asparagine,2790388)
+(Glutamic acid,2716251)
+(Arginine,3733975)
+(Histidine,2414611)
+(Lysine,4146707)
+(Serine,6612036)
+(Leucine,8034291)
+(Phenylalanine,4158808)
+(Tryptophan,1382291)
+(Glycine,3954684)
+(Cysteine,2515827)
+(Threonine,3668828)
+(Glutamine,2894122)
+(Aspartic acid,1668606)
+(Methionine,1302118)
+(Proline,3949687)
+(Isoleucine,4119275)
+
+HINTS:
+------
+I've provided you with starter source code that has TODO's in it.  You are not required to follow the logic of my TODO's -- you are only required to provide the output as described above.
+

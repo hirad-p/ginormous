@@ -1,0 +1,102 @@
+analyzing syslog messages with kafka and spark
+==============================================
+
+SUMMARY: 
+--------
+The goal of this lab is to implement a Spark streaming application that reads from an input topic of syslog messages, determines if the message severity/priority "exceeds" a threshold, and if so, creates and produces a record to an output topic of alerts.  Note that in syslog, priority/severity is defined with both strings as numbers.  
+
+The list below shows the mapping between number and string:
+7 - debug
+6 - info
+5 - notice
+4 - warning, warn
+3 - err, error
+2 - crit, 
+1 - alert, 
+0 - emerg, panic
+
+Here is a sample syslog info message (priority 6):
+6,16,Mar 28 12:47:17,mapr60,jcasaletto:,info message
+
+Here is a sample syslog err message (priority 3):
+3,16,Mar 28 14:08:18,mapr60,jcasaletto:,error message
+
+Important to note that your implementation must provide alerts for the threshold and anything more severe (i.e. less than or equal to the threshold).
+
+
+TODO:
+-----
+In order to complete this lab, you'll need to do the following:
+
+1. install and start apache kafka services as defined in the kafka_demo.txt file under Files -> LAB4 on CANVAS.
+
+2. create 2 kafka topics: input and output
+
+3. as the root user, configure syslog to show priority and facility in the syslog messages 
+--> follow the instructions on this link: https://askubuntu.com/questions/79684/syslog-not-showing-log-levels-in-messages)
+
+4. as the root user, read messages from /var/log/messages and publish them to the input topic:    
+--> run the following command in one window on your sandbox VM:
+# tail -f /var/log/messages | bin/kafka-console-producer.sh --broker-list localhost:9092 --topic input
+
+5. to generate a syslog message with a priority, run the following command
+$ logger -t local0.err "this is an err in local0 facility"
+
+6. Implement the TODO's defined in the Syslog2Alert.java source code provided in Files -> LAB4.  The records you produce in the output topic must conform to the following format:
+{"alert:":"2,16,Mar 28 14:25:15,mapr60,root:,crit message"}
+
+
+
+MISC NOTES:
+-----------
+1. When you start your zookeeper and kafka broker processes, they run as background jobs in your shell.  If you log out, they will still be running!  So make sure to kill them before logging out (as described in kafka_demo.txt).
+
+example:
+-bash-4.2$ jobs
+[1]+  Running                 bin/zookeeper-server-start.sh config/zookeeper.properties > /tmp/zk.out 2>&1 &
+[2]+  Running                 bin/kafka-server-start.sh config/server.properties > /tmp/kafka.out 2>&1 &
+
+-bash-4.2$ kill -9 %1
+[1]+  Exit 143                bin/zookeeper-server-start.sh config/zookeeper.properties > /tmp/zk.out 2>&1
+
+-bash-4.2$ kill -9 %2
+[2]+  Exit 143                bin/kafka-server-start.sh config/server.properties > /tmp/kafka.out 2>&1
+
+
+-bash-4.2$ jobs
+(no output)
+
+2. If you are unsure zookeeper is running, run the following command:
+netstat -an | grep 2181
+
+3. If you are unsure the broker is running, run the following command:
+netstat -an | grep 9092
+
+4. If you want to look at zookeeper messages, run the following command:
+tail -f /tmp/zk.out
+
+5. If you want to look at broker messages, run the following command:
+tail -f /tmp/kafka.out
+
+6. You should open a total of 6 windows open simultaneously in the sandbox VM in order to run this lab:
+	- start zookeeper and look at zookeeper messages
+	- start broker and look at broker messages
+	- start the producer 
+	- start the consumer 
+	- run the spark application
+	- run the logger command to generate a message using the logger command
+
+SUBMISSION:
+-----------
+In order to get full credit for this exercise, you must submit a single Java application source code file called Syslog2Alert.java in the spring2018.lab4 package.  This Spark application must generate messages to the output topic at appropriate priority levels and in the appropriate format.
+
+
+RUBRIC:
+-------
+You will be graded on the following criteria:
+
+1 point:	code compiles without errors
+2 points:	code runs without errors
+6 points:	code produces messages to output when threshold is reached
+1 point:	messages are of the appropriate format 
+
